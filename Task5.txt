@@ -1,0 +1,39 @@
+package firstTestscript;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
+public class Task5 {
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://www.fitpeo.com/revenue-calculator");
+        driver.manage().window().maximize();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement textField = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector("input[type='number']"))); 
+        WebElement slider = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector("input[type='range']"))); 
+        String targetValue = "560";
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].value = arguments[1]; arguments[0].dispatchEvent(new Event('input'));",
+                textField, targetValue);
+        int minValue = Integer.parseInt(slider.getAttribute("min"));
+        int maxValue = Integer.parseInt(slider.getAttribute("max"));
+        int sliderWidth = 197;
+        int targetPosition = (int) (((double) (Integer.parseInt(targetValue) - minValue) / (maxValue - minValue)) * sliderWidth);
+        Actions actions = new Actions(driver);
+        actions.clickAndHold(slider)
+                .moveByOffset(targetPosition, 0)
+                .release()
+                .perform(); 
+        String updatedSliderValue = slider.getAttribute("value");
+        System.out.println("Slider value after update: " + updatedSliderValue);
+        String updatedTextFieldValue = textField.getAttribute("value");
+        System.out.println("Text field value after update: " + updatedTextFieldValue);  
+    }
+}

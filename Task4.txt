@@ -1,0 +1,39 @@
+package firstTestscript;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
+public class Task4 {
+public static void main(String[] args) throws InterruptedException {
+   WebDriver driver = new ChromeDriver();
+    driver.get("https://www.fitpeo.com/revenue-calculator");
+    driver.manage().window().maximize();	
+    
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	WebElement slider = wait.until(ExpectedConditions.visibilityOfElementLocated(
+		                By.cssSelector("input[type='range']")));  
+		 int targetValue =820; 
+		 int minValue = 0;      
+		 int maxValue = 2000; 
+		 int sliderWidth =230;	 
+		 int offset = (targetValue - minValue) * sliderWidth / (maxValue - minValue); 
+		 JavascriptExecutor js = (JavascriptExecutor) driver;
+		 js.executeScript("arguments[0].value = arguments[1];", slider, targetValue);
+		
+		 WebElement valueField = driver.findElement(By.cssSelector("input[type='range']"));
+		 String updatedValue = valueField.getAttribute("value");
+		System.out.println("Current value: " + updatedValue);
+		 Actions actions = new Actions(driver);
+		 actions.moveToElement(slider).clickAndHold().moveByOffset(offset, 0).release().perform();     
+            if (updatedValue.equals(String.valueOf(targetValue))) {
+		           System.out.println("Slider successfully adjusted to " + targetValue);
+		            } else {
+		               System.out.println("Slider value did not update correctly. Current value: " + updatedValue);
+		            }   
+            }
+}
