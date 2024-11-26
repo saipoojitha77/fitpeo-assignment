@@ -1,0 +1,43 @@
+package firstTestscript;
+import java.time.Duration;
+import java.util.List;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+public class Task9 {
+	public static void main(String[] args) {		
+		 WebDriver driver = new ChromeDriver();		        
+		  driver.get("https://fitpeo.com/revenue-calculator");		            
+		  driver.manage().window().maximize();
+		  WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		  WebElement slider = wait.until(ExpectedConditions.visibilityOfElementLocated(
+		        	  By.cssSelector("input[type='range']")));  
+		  int targetValue =820; 
+		  int minValue = 0;      
+		  int maxValue = 2000; 
+		  int sliderWidth =230;	 
+		  int offset = (targetValue - minValue) * sliderWidth / (maxValue - minValue); 
+		  JavascriptExecutor js = (JavascriptExecutor) driver;
+		  js.executeScript("arguments[0].value = arguments[1];", slider, targetValue);
+		  WebElement valueField = driver.findElement(By.cssSelector("input[type='range']"));
+		  String updatedValue = valueField.getAttribute("value");
+		  System.out.println("Current value: " + updatedValue);
+		  Actions actions = new Actions(driver);
+		  actions.moveToElement(slider).clickAndHold().moveByOffset(offset, 0).release().perform();         
+		  List<WebElement> checkboxes = driver.findElements(By.cssSelector("div.MuiBox-root"));	            
+			for (WebElement box : checkboxes) {
+				if (box.getText().contains("CPT-99091") || box.getText().contains("CPT-99453") || 
+				    box.getText().contains("CPT-99454") || box.getText().contains("CPT-99474"))  {
+				    WebElement checkbox = box.findElement(By.cssSelector("input[type='checkbox']"));
+				     if (!checkbox.isSelected()) {
+				       checkbox.click();
+        }        
+		}
+	}
+	}
+}

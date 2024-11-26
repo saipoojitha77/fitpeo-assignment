@@ -1,0 +1,25 @@
+package firstTestscript;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.util.List;
+public class Task8 {
+	public static void main(String[] args) throws InterruptedException {	
+		WebDriver driver = new ChromeDriver();	        
+		  driver.get("https://fitpeo.com/revenue-calculator");    
+		   driver.manage().window().maximize();  
+		    List<WebElement> checkboxes = driver.findElements(By.cssSelector("div.MuiBox-root"));	            
+		      for (WebElement box : checkboxes) {
+		             if (box.getText().contains("CPT-99091") || box.getText().contains("CPT-99453") || 
+		                 box.getText().contains("CPT-99454") || box.getText().contains("CPT-99474"))  {
+		                  WebElement checkbox = box.findElement(By.cssSelector("input[type='checkbox']"));
+		                    if (!checkbox.isSelected()) {
+		                        checkbox.click();
+		         }
+		            }
+		        }           
+		  Thread.sleep(2000);	 
+	System.out.println("Selected CPT Codes: CPT-99091, CPT-99453, CPT-99454, and CPT-99474.");	
+	}
+}
